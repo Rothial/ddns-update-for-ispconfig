@@ -136,7 +136,7 @@ try {
 		$log->debug("End content");
 		// check if record is A IPv4 (not cname, mx, txt, ...)
 		$log->debug("Check record type");
-		if ($dns_record[0]['type']!='a'){
+		if ($dns_record[0]['type']!='A'){
 			$log->debug("Record type is not A. You can only update a A record");
 			echo "dnserr";
 			exit;
