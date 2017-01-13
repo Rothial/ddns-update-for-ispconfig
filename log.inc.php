@@ -9,15 +9,15 @@ class log {
 	
     function debug($log) {
         $log = date('Y-m-d H:i:s')." ".$log."\n"; 
-        $maj = fopen($this->file,"a+"); // On ouvre le fichier en lecture/écriture
+        $maj = fopen($this->file,"a+"); // Open the file in read/write mode
         fseek($maj, 0, SEEK_END);
-        fputs($maj, $log);            // On écrit dans le fichier
+        fputs($maj, $log);            // We write in the file
         fclose($maj);    
     }
     
     function clean() {
-        $maj = fopen($this->file,"a+"); // On ouvre le fichier en lecture/écriture
-        ftruncate($maj,0);            // on efface le contenu d'un fichier
+        $maj = fopen($this->file,"a+"); // Open the file in read/write mode
+        ftruncate($maj,0);            // Erase the contents of a file
         fclose($maj);  
     }
  
