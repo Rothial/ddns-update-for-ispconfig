@@ -4,7 +4,10 @@ class log {
     private $file; 
     
 	function __construct($name) {
-        $this->file = "log_".str_replace('.', '_', $name).".txt" ; 
+	$processUser = posix_getpwuid(posix_geteuid()); // Move log files elsewhere
+	$logpath = strstr($processUser['dir'], '.', true);
+        $this->file = "".$logpath."/private/log_".str_replace('.', '_', $name).".txt" ;
+       
     }
 	
     function debug($log) {
