@@ -39,8 +39,8 @@ else
 	$_SERVER['PHP_AUTH_PW'] = $_GET['password'];
 }
 
-$log->debug("AUTH USER ".$_SERVER['PHP_AUTH_USER']);
-$log->debug("AUTH PASS ".$_SERVER['PHP_AUTH_PW']);
+//$log->debug("AUTH USER ".$_SERVER['PHP_AUTH_USER']);
+//$log->debug("AUTH PASS ".$_SERVER['PHP_AUTH_PW']);
 
 
 if (!isset($_GET['myip']))
@@ -73,7 +73,7 @@ else
 			$log->debug("domain name ". $domain ." based on the hostname is in the exception list, You can not use $myip with this hostname. Use REMOTE_ADDR instead: ".$_SERVER["REMOTE_ADDR"]);
 		}
 	}
-	if (!found) $log->debug('No exception found for this hostname: '.$_GET['hostname']);
+	if (!$found) $log->debug('No exception found for this hostname: '.$_GET['hostname']);
 	
 }
 
@@ -87,13 +87,13 @@ $firstdotpos=strpos($_GET["hostname"], '.');
 
 if ($firstdotpos == false) {
 	$log->debug("Invalid HOSTNAME format : ".$_GET["hostname"]);
-    echo "notqdn" ; 
+    echo "notqdn \n" ; 
 	exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] != 'GET') {
     $log->debug('ERROR: HTTP method ' . $_SERVER['REQUEST_METHOD'] . ' is not allowed. badagent');
-    echo 'badagent' ;
+    echo 'badagent \n' ;
 	exit;
 }
 
@@ -108,10 +108,10 @@ $client = new SoapClient(null, array('location' => $soap_location,
 		
 try {
 	if($session_id = $client->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
-		$log->debug('Logged successfull. Session ID:'.$session_id);
+		$log->debug('Logged successfull.'); // Session ID:'.$session_id);
 	} else {
         $log->debug('Not logged. Session ID : '.$session_id) ; 
-        echo "badauth" ; 
+        echo "badauth \n" ; 
 		exit;
     }
 
@@ -120,7 +120,7 @@ try {
 	$zone = $client->dns_zone_get($session_id, array('origin' => $dnszone));
 	if(count($zone)==0) {
 		$log->debug("DNS Zone not found at ".time());
-        echo "dnserr" ; 
+        echo "dnserr \n" ; 
 		$affected_rows=0;
         exit;
 	} 
@@ -138,7 +138,7 @@ try {
 		$log->debug("Check record type");
 		if ($dns_record[0]['type']!='A'){
 			$log->debug("Record type is not A. You can only update a A record");
-			echo "dnserr";
+			echo "dnserr \n";
 			exit;
 		}
 		$log->debug("End check record type");
@@ -157,7 +157,7 @@ try {
 			$client->dns_zone_update($session_id, 0, $zone[0]['id'], $zone[0]);
 			$log->debug("Update zone finish");
 		} else {
-			echo "nochange";
+			echo "nochange \n";
 			$log->debug("No update needed!");
 			exit;
 		}
@@ -168,7 +168,7 @@ try {
 	if($client->logout($session_id)) {
 		$log->debug('Logged out');
 	}
-    echo 'good';  
+    echo 'good \n';  
     
     $log->debug("End script by ".$ip." at ".date('Y-m-d H:i:s')) ; 
 
